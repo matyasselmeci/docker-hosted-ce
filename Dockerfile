@@ -29,8 +29,9 @@ COPY drain-ce.sh /usr/local/bin/
 COPY 10-htcondor-ce.conf /etc/supervisord.d/
 
 # Add a cron job to run the update-all-wn-clients script (the RPM only ships
-# with a systemd timer)
-COPY update-wn-clients.cron /etc/cron.d/update-wn.clients.cron
+# with a systemd timer).  Put it into place only once we've finished the local
+# setup.
+COPY update-wn-clients.cron /tmp/update-wn.clients.cron
 
 #ENTRYPOINT ["osg-configure","-c"]
 ENTRYPOINT ["/usr/local/sbin/supervisord_startup.sh"]

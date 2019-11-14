@@ -41,6 +41,11 @@ echo "Running OSG configure.."
 # Run the OSG Configure script to set up bosco
 osg-configure -c
 
+echo "Set up WN clients on remote"
+/usr/bin/update-all-remote-wn-clients
+
+# TODO remove this setup script; the update script above should
+# take care of this.
 echo "Copying setup script to remote side.."
 # Run some additional adjustments as per Marco's doc
 scp -i /etc/osg/bosco.key /etc/osg/remote-site-setup.sh $ENDPOINT:"~/remote-site-setup.sh"
@@ -66,3 +71,7 @@ else
   echo "transferring $LOCAL_ATTRIBUTES_FILE to remote side.."
   scp -i /etc/osg/bosco.key $LOCAL_ATTRIBUTES_FILE $ENDPOINT:"~/bosco/glite/bin/$LOCAL_ATTRIBUTES_FILE"
 fi
+
+echo "Enabling WN client updater cron job"
+mv /tmp/update-wn-clients.cron /etc/cron.d/update-wn-clients.cron
+
