@@ -1,0 +1,4 @@
+RANDOM_DELAY = 10
+# ^ minutes
+0 */12 * * * root /usr/bin/update-all-remote-wn-clients
+
