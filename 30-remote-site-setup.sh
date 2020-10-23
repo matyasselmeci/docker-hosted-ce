@@ -11,6 +11,7 @@ set -e
 
 BOSCO_KEY=/etc/osg/bosco.key
 ENDPOINT_CONFIG=/etc/endpoints.ini
+SKIP_WN_INSTALL=no
 
 function errexit {
     echo "$1" >&2
@@ -140,7 +141,7 @@ echo "condor ALL = ($condor_sudo_users) NOPASSWD: /usr/bin/update-remote-wn-clie
 chmod 644 $CONDOR_SUDO_FILE
 
 grep '^OSG_GRID="/cvmfs/oasis.opensciencegrid.org/osg-software/osg-wn-client' \
-     /var/lib/osg/job-environment*.conf > /dev/null 2>&1 || cvmfs_wn_client=no
+     /var/lib/osg/job-environment*.conf > /dev/null 2>&1 && SKIP_WN_INSTALL=yes
 
 # Enable bosco_cluster debug output
 bosco_cluster_opts=(-d )
@@ -169,7 +170,7 @@ remote_os_info=$(fetch_remote_os_info "$(printf "%s\n" $users | head -n1)" "$rem
 remote_os_ver=$(echo "$remote_os_info" | awk -F '=' '/^VERSION_ID/ {print $2}' | tr -d '"')
 
 for ruser in $users; do
-    [[ $cvmfs_wn_client == 'no' ]] && setup_endpoints_ini "${remote_os_ver%%.*}"
+    [[ $SKIP_WN_INSTALL == 'no' ]] && setup_endpoints_ini "${remote_os_ver%%.*}"
     # $REMOTE_BATCH needs to be specified in the environment
     bosco_cluster "${bosco_cluster_opts[@]}" -a "${ruser}@$remote_fqdn" "$REMOTE_BATCH"
 
@@ -178,7 +179,7 @@ for ruser in $users; do
           "${ruser}@$remote_fqdn:$REMOTE_BOSCO_DIR/glite/etc"
 done
 
-if [[ $cvmfs_wn_client == 'no' ]]; then
+if [[ $SKIP_WN_INSTALL == 'no' ]]; then
     echo "Installing remote WN client tarballs..."
     sudo -u condor update-all-remote-wn-clients --log-dir /var/log/condor-ce/
 else
