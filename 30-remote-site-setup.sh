@@ -169,6 +169,9 @@ done
 remote_os_info=$(fetch_remote_os_info "$(printf "%s\n" $users | head -n1)" "$remote_fqdn")
 remote_os_ver=$(echo "$remote_os_info" | awk -F '=' '/^VERSION_ID/ {print $2}' | tr -d '"')
 
+# Skip WN client installation for non-RHEL-based remote clusters
+egrep "^ID_LIKE=.*(rhel|centos).*" <<< $remote_os_info || SKIP_WN_INSTALL=yes
+
 for ruser in $users; do
     [[ $SKIP_WN_INSTALL == 'no' ]] && setup_endpoints_ini "${remote_os_ver%%.*}"
     # $REMOTE_BATCH needs to be specified in the environment
