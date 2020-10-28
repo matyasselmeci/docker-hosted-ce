@@ -1,4 +1,6 @@
-#!/bin/bash -x
+#!/bin/bash
+
+set -x
 
 # save old -e status
 if [[ $- = *e* ]]; then
@@ -74,8 +76,8 @@ EOF
 # Install the WN client, CAs, and CRLs on the remote host
 # Store logs in /var/log/condor-ce/ to simplify serving logs via Kubernetes
 setup_endpoints_ini () {
+    echo "Setting up endpoint.ini entry for ${ruser}@$remote_fqdn..."
     remote_os_major_ver=$1
-    remote_home_dir=$(ssh -q -i $BOSCO_KEY "${ruser}@$remote_fqdn" pwd)
     osg_ver=3.4
     if [[ $remote_os_major_ver -gt 6 ]]; then
         osg_ver=3.5
@@ -85,7 +87,7 @@ setup_endpoints_ini () {
 local_user = ${ruser}
 remote_host = $remote_fqdn
 remote_user = ${ruser}
-remote_dir = $remote_home_dir/bosco-osg-wn-client
+remote_dir = bosco-osg-wn-client
 upstream_url = https://repo.opensciencegrid.org/tarball-install/${osg_ver}/osg-wn-client-latest.el${remote_os_major_ver}.x86_64.tar.gz
 EOF
 }
@@ -173,10 +175,12 @@ remote_os_ver=$(echo "$remote_os_info" | awk -F '=' '/^VERSION_ID/ {print $2}' |
 [[ $remote_os_info =~ (^|$'\n')ID_LIKE=.*(rhel|centos) ]] || SKIP_WN_INSTALL=yes
 
 for ruser in $users; do
+    echo "Installing remote Bosco installation for ${ruser}@$remote_fqdn"
     [[ $SKIP_WN_INSTALL == 'no' ]] && setup_endpoints_ini "${remote_os_ver%%.*}"
     # $REMOTE_BATCH needs to be specified in the environment
     bosco_cluster "${bosco_cluster_opts[@]}" -a "${ruser}@$remote_fqdn" "$REMOTE_BATCH"
 
+    echo "Installing environment files for $ruser@$remote_fqdn..."
     # Copy over environment files to allow for dynamic WN variables (SOFTWARE-4117)
     rsync -av /var/lib/osg/osg-*job-environment.conf \
           "${ruser}@$remote_fqdn:$REMOTE_BOSCO_DIR/glite/etc"
