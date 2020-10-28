@@ -142,8 +142,8 @@ echo "condor ALL = ($condor_sudo_users) NOPASSWD: /usr/bin/update-remote-wn-clie
       > $CONDOR_SUDO_FILE
 chmod 644 $CONDOR_SUDO_FILE
 
-grep '^OSG_GRID="/cvmfs/oasis.opensciencegrid.org/osg-software/osg-wn-client' \
-     /var/lib/osg/osg-job-environment*.conf > /dev/null 2>&1 && SKIP_WN_INSTALL=yes || true
+grep -qs '^OSG_GRID="/cvmfs/oasis.opensciencegrid.org/osg-software/osg-wn-client' \
+     /var/lib/osg/osg-job-environment*.conf && SKIP_WN_INSTALL=yes
 
 # Enable bosco_cluster debug output
 bosco_cluster_opts=(-d )
