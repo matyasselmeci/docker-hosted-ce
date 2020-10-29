@@ -103,6 +103,13 @@ fi
 REMOTE_HOST_KEY=`ssh-keyscan -p "$remote_port" "$remote_fqdn"`
 [[ -n $REMOTE_HOST_KEY ]] || errexit "Failed to determine host key for $remote_fqdn:$remote_port"
 
+# HACK: Symlink the Bosco key to the location expected by
+# bosco_cluster so it doesn't go and try to generate a new one
+root_ssh_dir=/root/.ssh/
+mkdir -p $root_ssh_dir
+chmod 700 $root_ssh_dir
+ln -s $BOSCO_KEY $root_ssh_dir/bosco_key.rsa
+
 cat <<EOF > /etc/ssh/ssh_config
 Host $remote_fqdn
   Port $remote_port
