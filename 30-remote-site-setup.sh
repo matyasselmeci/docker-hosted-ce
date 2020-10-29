@@ -55,9 +55,6 @@ Host $remote_fqdn
   Port $remote_port
   IdentityFile ${ssh_key}
   IdentitiesOnly yes
-  ControlMaster auto
-  ControlPath ~/.ssh/cm-%r@%h:%p
-  ControlPersist  15m
 EOF
   debug_file_contents "$ssh_config"
 
@@ -109,6 +106,9 @@ cat <<EOF > /etc/ssh/ssh_config
 Host $remote_fqdn
   Port $remote_port
   IdentityFile ${BOSCO_KEY}
+  ControlMaster auto
+  ControlPath /tmp/cm-%i-%r@%h:%p
+  ControlPersist  15m
 EOF
 debug_file_contents /etc/ssh/ssh_config
 
