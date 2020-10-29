@@ -174,6 +174,10 @@ remote_os_ver=$(echo "$remote_os_info" | awk -F '=' '/^VERSION_ID/ {print $2}' |
 # Skip WN client installation for non-RHEL-based remote clusters
 [[ $remote_os_info =~ (^|$'\n')ID_LIKE=.*(rhel|centos) ]] || SKIP_WN_INSTALL=yes
 
+# HACK: By default, Singularity containers don't specify $HOME and
+# bosco_cluster needs it
+[[ -n $HOME ]] || HOME=/root
+
 for ruser in $users; do
     echo "Installing remote Bosco installation for ${ruser}@$remote_fqdn"
     [[ $SKIP_WN_INSTALL == 'no' ]] && setup_endpoints_ini "${remote_os_ver%%.*}"
