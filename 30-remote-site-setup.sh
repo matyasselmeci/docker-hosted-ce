@@ -55,6 +55,9 @@ Host $remote_fqdn
   Port $remote_port
   IdentityFile ${ssh_key}
   IdentitiesOnly yes
+  ControlMaster auto
+  ControlPath ~/.ssh/cm-%r@%h:%p
+  ControlPersist  15m
 EOF
   debug_file_contents "$ssh_config"
 
