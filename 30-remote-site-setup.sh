@@ -55,9 +55,6 @@ Host $remote_fqdn
   Port $remote_port
   IdentityFile ${ssh_key}
   IdentitiesOnly yes
-  ControlMaster auto
-  ControlPath ~/.ssh/cm-%r@%h:%p
-  ControlPersist  15m
 EOF
   debug_file_contents "$ssh_config"
 
@@ -105,26 +102,18 @@ fi
 REMOTE_HOST_KEY=`ssh-keyscan -p "$remote_port" "$remote_fqdn"`
 [[ -n $REMOTE_HOST_KEY ]] || errexit "Failed to determine host key for $remote_fqdn:$remote_port"
 
-# Set the appropriate SSH key for bosco_cluster commands
-root_ssh_dir=/root/.ssh/
-mkdir -p $root_ssh_dir
-chmod 700 $root_ssh_dir
-
-ssh_config=$root_ssh_dir/config
-cat <<EOF > "$ssh_config"
+cat <<EOF > /etc/ssh/ssh_config
 Host $remote_fqdn
   Port $remote_port
   IdentityFile ${BOSCO_KEY}
+  ControlMaster auto
+  ControlPath /tmp/cm-%i-%r@%h:%p
+  ControlPersist  15m
 EOF
-chmod 700 $ssh_config
-debug_file_contents "$ssh_config"
+debug_file_contents /etc/ssh/ssh_config
 
-known_hosts=$root_ssh_dir/known_hosts
-echo "$REMOTE_HOST_KEY" >> "$known_hosts"
-debug_file_contents "$known_hosts"
-
-# Debug output of file permissions
-ls -l $root_ssh_dir
+echo "$REMOTE_HOST_KEY" >> /etc/ssh/ssh_known_hosts
+debug_file_contents /etc/ssh/ssh_known_hosts
 
 # Populate the bosco override dir from a Git repo
 if [[ -n $BOSCO_GIT_ENDPOINT && -n $BOSCO_DIRECTORY ]]; then
