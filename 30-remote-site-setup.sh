@@ -194,6 +194,7 @@ if [[ $SKIP_WN_INSTALL == 'no' ]]; then
     echo "Installing remote WN client tarballs..."
     sudo -u condor update-all-remote-wn-clients --log-dir /var/log/condor-ce/
 else
+    echo "SKIP_WNCLIENT = True" > /etc/condor-ce/config.d/50-skip-wnclient-cron.conf
     echo "Skipping remote WN client tarball installation, using CVMFS..."
 fi
 
