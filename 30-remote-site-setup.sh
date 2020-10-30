@@ -78,6 +78,10 @@ EOF
 setup_endpoints_ini () {
     echo "Setting up endpoint.ini entry for ${ruser}@$remote_fqdn..."
     remote_os_major_ver=$1
+    # The WN client updater uses "remote_dir" for WN client
+    # configuration and remote copy. We need the absolute path
+    # specifically for fetch-crl
+    remote_home_dir=$(ssh -q -i $BOSCO_KEY "${ruser}@$remote_fqdn" pwd)
     osg_ver=3.4
     if [[ $remote_os_major_ver -gt 6 ]]; then
         osg_ver=3.5
@@ -87,7 +91,7 @@ setup_endpoints_ini () {
 local_user = ${ruser}
 remote_host = $remote_fqdn
 remote_user = ${ruser}
-remote_dir = bosco-osg-wn-client
+remote_dir = $remote_home_dir/bosco-osg-wn-client
 upstream_url = https://repo.opensciencegrid.org/tarball-install/${osg_ver}/osg-wn-client-latest.el${remote_os_major_ver}.x86_64.tar.gz
 EOF
 }
