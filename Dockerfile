@@ -43,7 +43,6 @@ ADD overrides/condor_ce_jobmetrics /usr/share/condor-ce/condor_ce_jobmetrics
 COPY drain-ce.sh /usr/local/bin/
 
 COPY configure-nonroot-gratia.py /usr/local/bin/
-COPY remote-wn-client-wrapper.sh /usr/local/bin/
 
 # Use "ssh -q" in bosco_cluster and update-remote-wn-client until the changes have been
 # upstreamed to condor and hosted-ce-tools packaging, respectively
