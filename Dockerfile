@@ -30,6 +30,9 @@ RUN chmod 644 /etc/cron.d/fetch-crl
 # pub key to the remote side. We set this up with the site out of band.
 ADD overrides/bosco_cluster /usr/bin/bosco_cluster
 
+# Update Ubuntu 18 to use the latest 1.3 tarball (SOFTWARE-4337)
+ADD overrides/bosco_findplatform /usr/bin/bosco_findplatform
+
 # FIXME: override remote_gahp to fix issues with HPC job submission.  This can
 # be dropped when https://github.com/htcondor/htcondor/pull/130 is merged and
 # released in HTConodr 8.9
