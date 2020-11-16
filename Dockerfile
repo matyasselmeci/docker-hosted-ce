@@ -68,6 +68,10 @@ RUN patch -d /usr/lib/python3.6/site-packages -p1 < /tmp/internal-squid.patch
 #     ...
 COPY bosco-override-setup.sh /usr/local/bin
 
+# FIXME: osg-configure should only warn on fetch-crl failure (SOFTWARE-4364)
+COPY overrides/SOFTWARE-4364.crl-warning.patch /tmp
+RUN patch -d /usr/lib/python3.6/site-packages -p1 < /tmp/SOFTWARE-4364.crl-warning.patch
+
 # Manage HTCondor-CE with supervisor
 COPY 10-htcondor-ce.conf /etc/supervisord.d/
 

@@ -1,0 +1,66 @@
+From 96cf661e8aab4ce3cec007123c785d82ac208292 Mon Sep 17 00:00:00 2001
+From: Matyas Selmeci <matyas@cs.wisc.edu>
+Date: Mon, 16 Nov 2020 15:41:36 -0600
+Subject: [PATCH] Make fetch-crl success optional, but give a loud warning on
+ failure
+
+---
+ osg_configure/configure_modules/misc.py |  6 ++++--
+ osg_configure/modules/utilities.py      | 14 ++++++++++++--
+ 2 files changed, 16 insertions(+), 4 deletions(-)
+
+diff --git a/osg_configure/configure_modules/misc.py b/osg_configure/configure_modules/misc.py
+index 40dea50..5490155 100644
+--- a/osg_configure/configure_modules/misc.py
++++ b/osg_configure/configure_modules/misc.py
+@@ -108,8 +108,10 @@ def configure(self, attributes):
+ 
+         # run fetch-crl script
+         if not utilities.fetch_crl():
+-            self.log("Error while running fetch-crl script", level=logging.ERROR)
+-            raise exceptions.ConfigureError('fetch-crl returned non-zero exit code')
++            self.log("Error while running fetch-crl script", level=logging.WARNING)
++
++        if not utilities.crls_exist():
++            self.log("No CRLs exist and Fetch-CRL couldn't download any.  GSI authentication is likely to fail.  To attempt another download, run 'fetch-crl'.", level=logging.WARNING)
+ 
+         if self.authorization_method == 'gridmap':
+             self._set_lcmaps_callout(False)
+diff --git a/osg_configure/modules/utilities.py b/osg_configure/modules/utilities.py
+index 6ca2068..652468b 100644
+--- a/osg_configure/modules/utilities.py
++++ b/osg_configure/modules/utilities.py
+@@ -19,6 +19,7 @@
+            'blank',
+            'get_vos',
+            'service_enabled',
++           'crls_exist',
+            'fetch_crl',
+            'run_script',
+            'get_condor_location',
+@@ -210,14 +211,23 @@ def service_enabled(service_name):
+         return False
+ 
+ 
++def crls_exist():
++    try:
++        crl_files = glob.glob('/etc/grid-security/certificates/*.r0')
++        if len(crl_files) > 0:
++            return True
++    except EnvironmentError:
++        pass
++    return False
++
++
+ def fetch_crl():
+     """
+     Run fetch_crl script and return a boolean indicating whether it was successful
+     """
+ 
+     try:
+-        crl_files = glob.glob('/etc/grid-security/certificates/*.r0')
+-        if len(crl_files) > 0:
++        if crls_exist():
+             sys.stdout.write("CRLs exist, skipping fetch-crl invocation\n")
+             sys.stdout.flush()
+             return True
