@@ -1,8 +1,8 @@
 FROM opensciencegrid/software-base:fresh
 LABEL maintainer "OSG Software <help@opensciencegrid.org>"
 
-RUN yum install -y --enablerepo=osg-minefield \
-                   --enablerepo=osg-upcoming-minefield \
+RUN yum install -y --enablerepo=osg-testing \
+                   --enablerepo=osg-upcoming-testing \
                    osg-ce-bosco \
                    git \
                    openssh-clients \
@@ -13,7 +13,7 @@ RUN yum install -y --enablerepo=osg-minefield \
                    # ^^^ for fetch-crl, in the rare case that the CA forces HTTPS
                    patch && \
    # Separate CE View installation to work around Yum depsolving fail
-   yum install -y --enablerepo=osg-minefield \
+   yum install -y --enablerepo=osg-testing \
                    htcondor-ce-view && \
     yum clean all && \
     rm -rf /var/cache/yum/
