@@ -77,4 +77,3 @@ RUN patch -d /usr/lib/python3.6/site-packages -p1 < /tmp/SOFTWARE-4364.crl-warni
 # Manage HTCondor-CE with supervisor
 COPY 10-htcondor-ce.conf /etc/supervisord.d/
 
-ENTRYPOINT ["/usr/local/sbin/supervisord_startup.sh"]
