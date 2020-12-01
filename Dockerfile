@@ -1,6 +1,10 @@
 FROM opensciencegrid/software-base:fresh
 LABEL maintainer "OSG Software <help@opensciencegrid.org>"
 
+# Impatiently ignore the Yum mirrors
+RUN sed -i 's/\#baseurl/baseurl/; s/mirrorlist/\#mirrorlist/' \
+           /etc/yum.repos.d/osg-testing.repo
+
 RUN yum install -y --enablerepo=osg-testing \
                    --enablerepo=osg-upcoming-testing \
                    osg-ce-bosco \
@@ -77,4 +81,3 @@ RUN patch -d /usr/lib/python3.6/site-packages -p1 < /tmp/SOFTWARE-4364.crl-warni
 # Manage HTCondor-CE with supervisor
 COPY 10-htcondor-ce.conf /etc/supervisord.d/
 
-ENTRYPOINT ["/usr/local/sbin/supervisord_startup.sh"]
