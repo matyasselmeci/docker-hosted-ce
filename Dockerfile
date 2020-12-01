@@ -1,6 +1,10 @@
 FROM opensciencegrid/software-base:fresh
 LABEL maintainer "OSG Software <help@opensciencegrid.org>"
 
+# Impatiently ignore the Yum mirrors
+RUN sed -i 's/\#baseurl/baseurl/; s/mirrorlist/\#mirrorlist/' \
+           /etc/yum.repos.d/osg-testing.repo
+
 RUN yum install -y --enablerepo=osg-testing \
                    --enablerepo=osg-upcoming-testing \
                    osg-ce-bosco \
