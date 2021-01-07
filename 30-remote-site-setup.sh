@@ -176,7 +176,7 @@ remote_os_info=$(fetch_remote_os_info "$(printf "%s\n" $users | head -n1)" "$rem
 remote_os_ver=$(echo "$remote_os_info" | awk -F '=' '/^VERSION_ID/ {print $2}' | tr -d '"')
 
 # Skip WN client installation for non-RHEL-based remote clusters
-[[ $remote_os_info =~ (^|$'\n')ID_LIKE=.*(rhel|centos) ]] || SKIP_WN_INSTALL=yes
+[[ $remote_os_info =~ (^|$'\n')ID_LIKE=.*(rhel|centos|fedora) ]] || SKIP_WN_INSTALL=yes
 
 # HACK: By default, Singularity containers don't specify $HOME and
 # bosco_cluster needs it
