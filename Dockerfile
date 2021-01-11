@@ -54,11 +54,6 @@ COPY configure-nonroot-gratia.py /usr/local/bin/
 COPY overrides/ssh_q.patch /tmp
 RUN patch -d / -p0 < /tmp/ssh_q.patch
 
-# FIXME: Squid env var only needs to be readable by workers (SOFTWARE-4362).
-# Can be dropped after osg-configure is built into osg-minefield with this patch
-COPY overrides/internal-squid.patch /tmp
-RUN patch -d /usr/lib/python3.6/site-packages -p1 < /tmp/internal-squid.patch
-
 # Set up Bosco override dir from Git repo (SOFTWARE-3903)
 # Expects a Git repo with the following directory structure:
 #     RESOURCE_NAME_1/
