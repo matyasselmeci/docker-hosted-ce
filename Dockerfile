@@ -28,10 +28,6 @@ COPY 99-container.conf /usr/share/condor-ce/config.d/
 ADD fetch-crl /etc/cron.d/fetch-crl
 RUN chmod 644 /etc/cron.d/fetch-crl
 
-# HACK: override bosco_cluster so that it doesn't copy over the SSH
-# pub key to the remote side. We set this up with the site out of band.
-ADD overrides/bosco_cluster /usr/bin/bosco_cluster
-
 # Update Ubuntu 18 to use the latest 1.3 tarball (SOFTWARE-4337)
 ADD overrides/bosco_findplatform /usr/bin/bosco_findplatform
 
@@ -53,6 +49,15 @@ COPY configure-nonroot-gratia.py /usr/local/bin/
 # upstreamed to condor and hosted-ce-tools packaging, respectively
 COPY overrides/ssh_q.patch /tmp
 RUN patch -d / -p0 < /tmp/ssh_q.patch
+
+# Enable bosco_cluster xtrace
+COPY overrides/bosco_cluster_xtrace.patch /tmp
+RUN patch -d / -p0 < /tmp/bosco_cluster_xtrace.patch
+
+# HACK: Don't copy over the SSH pub key to the remote side. We set
+# this up with the site out of band.
+COPY overrides/skip_key_copy.patch /tmp
+RUN patch -d / -p0 < /tmp/skip_key_copy.patch
 
 # Set up Bosco override dir from Git repo (SOFTWARE-3903)
 # Expects a Git repo with the following directory structure:
