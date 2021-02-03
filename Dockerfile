@@ -37,8 +37,7 @@ COPY drain-ce.sh /usr/local/bin/
 
 COPY configure-nonroot-gratia.py /usr/local/bin/
 
-# Use "ssh -q" in bosco_cluster and update-remote-wn-client until the changes have been
-# upstreamed to condor and hosted-ce-tools packaging, respectively
+# Use "ssh -q" in bosco_cluster until the chang has been upstreamed to condor
 COPY overrides/ssh_q.patch /tmp
 RUN patch -d / -p0 < /tmp/ssh_q.patch
 
