@@ -28,11 +28,6 @@ COPY 99-container.conf /usr/share/condor-ce/config.d/
 ADD fetch-crl /etc/cron.d/fetch-crl
 RUN chmod 644 /etc/cron.d/fetch-crl
 
-# FIXME: override remote_gahp to fix issues with HPC job submission.  This can
-# be dropped when https://github.com/htcondor/htcondor/pull/130 is merged and
-# released in HTConodr 8.9
-ADD overrides/remote_gahp /usr/sbin/remote_gahp
-
 # HACK: override condor_ce_jobmetrics from SOFTWARE-4183 until it is released in
 # HTCondor-CE.
 ADD overrides/condor_ce_jobmetrics /usr/share/condor-ce/condor_ce_jobmetrics
