@@ -28,9 +28,6 @@ COPY 99-container.conf /usr/share/condor-ce/config.d/
 ADD fetch-crl /etc/cron.d/fetch-crl
 RUN chmod 644 /etc/cron.d/fetch-crl
 
-# Update Ubuntu 18 to use the latest 1.3 tarball (SOFTWARE-4337)
-ADD overrides/bosco_findplatform /usr/bin/bosco_findplatform
-
 # FIXME: override remote_gahp to fix issues with HPC job submission.  This can
 # be dropped when https://github.com/htcondor/htcondor/pull/130 is merged and
 # released in HTConodr 8.9
