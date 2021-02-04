@@ -1,17 +1,6 @@
-From 7d9acf37a1168711ffa4458e33c7bc99a5b2c543 Mon Sep 17 00:00:00 2001
-From: Brian Lin <brianhlin@gmail.com>
-Date: Thu, 4 Feb 2021 12:18:57 -0600
-Subject: [PATCH] Drop Python-based remote OS/distro detection (HTCONDOR-242)
-
----
- src/condor_contrib/bosco/bosco_cluster | 70 +++++++++++++++++---------
- 1 file changed, 45 insertions(+), 25 deletions(-)
-
-diff --git a/src/condor_contrib/bosco/bosco_cluster b/src/condor_contrib/bosco/bosco_cluster
-index ebcb582ab4..fca8e69568 100755
 --- /usr/bin/bosco_cluster
 +++ /usr/bin/bosco_cluster
-@@ -253,32 +253,51 @@ ssh_find_remote () {
+@@ -253,31 +253,51 @@ ssh_find_remote () {
      # Find the platform of the remote host
      # 1. remote host
      remote_host=$1
@@ -88,6 +77,3 @@ index ebcb582ab4..fca8e69568 100755
  }
  
  
--- 
-2.25.4
-
