@@ -11,7 +11,7 @@ diff --git a/src/condor_contrib/bosco/bosco_cluster b/src/condor_contrib/bosco/b
 index ebcb582ab4..fca8e69568 100755
 --- /usr/bin/bosco_cluster
 +++ /usr/bin/bosco_cluster
-@@ -253,31 +253,51 @@ ssh_find_remote () {
+@@ -253,32 +253,51 @@ ssh_find_remote () {
      # Find the platform of the remote host
      # 1. remote host
      remote_host=$1
@@ -74,7 +74,7 @@ index ebcb582ab4..fca8e69568 100755
 +    major_ver="${ver%%.*}"
 +
 +    case "$dist" in
-+        (redhat|centos)
++        (rhel|centos)
 +            echo "CentOS${major_ver}" ;;
 +        debian)
 +            echo "Debian${major_ver}" ;;
