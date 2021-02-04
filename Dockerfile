@@ -50,6 +50,11 @@ RUN patch -d / -p0 < /tmp/bosco_cluster_xtrace.patch
 COPY overrides/skip_key_copy.patch /tmp
 RUN patch -d / -p0 < /tmp/skip_key_copy.patch
 
+# Fix Ubuntu20 OS detection (SOFTWARE-4463)
+# Can be dropped when HTCONDOR-242 is involved
+COPY overrides/HTCONDOR-242.remote-os-detection.patch /tmp
+RUN patch -d / -p0 < /tmp/HTCONDOR-242.remote-os-detection.patch
+
 # Set up Bosco override dir from Git repo (SOFTWARE-3903)
 # Expects a Git repo with the following directory structure:
 #     RESOURCE_NAME_1/
